@@ -12,8 +12,16 @@ jobs:
 
     - name: Install Flyway
       run: |
-        sudo git clone git://github.com/pliniocsfernandes/flyway-command-line.git /opt/flyway
-        sudo ln -s /opt/flyway/flyway.sh /usr/bin/flyway
+        curl -L -o flyway-commandline.tar.gz "https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/11.1.0/flyway-commandline-11.1.0-linux-x64.tar.gz"
+        
+        if [ ! -s flyway-commandline.tar.gz ]; then
+          echo "Error: Flyway archive download failed!"
+          exit 1
+        fi
+        
+        tar -xzf flyway-commandline.tar.gz
+        sudo ln -s "$(pwd)/flyway-11.1.0/flyway" /usr/local/bin/flyway
+        rm flyway-commandline.tar.gz
 
     - name: Run Flyway migrations
       env:
